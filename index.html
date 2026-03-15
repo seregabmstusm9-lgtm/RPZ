@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Калькулятор группы риска развития профессионального заболевания</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f1419;
+      --surface: #1a2332;
+      --surface-hover: #243044;
+      --border: #2d3a4d;
+      --text: #e6edf3;
+      --text-muted: #8b9cb3;
+      --accent: #3b82f6;
+      --accent-hover: #2563eb;
+      --success: #22c55e;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 12px;
+      --radius-sm: 8px;
+      --shadow: 0 4px 24px rgba(0,0,0,0.25);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Manrope', -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      line-height: 1.5;
+    }
+
+    .page {
+      max-width: 560px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+    }
+
+    header {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+    }
+
+    .subtitle a {
+      color: var(--text-muted);
+      text-decoration: none;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .subtitle a:hover {
+      color: var(--accent);
+      border-bottom-color: var(--accent);
+    }
+
+    .progress-wrap {
+      margin-bottom: 2rem;
+    }
+
+    .progress-bar {
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), #60a5fa);
+      border-radius: 2px;
+      transition: width 0.35s ease;
+    }
+
+    .progress-text {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      margin-top: 0.5rem;
+    }
+
+    .step-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.75rem;
+      box-shadow: var(--shadow);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .step-title {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.5rem;
+    }
+
+    .step-question {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+
+    .options {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .option {
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+      padding: 1rem 1rem;
+      background: var(--bg);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: border-color 0.2s, background 0.2s;
+      text-align: left;
+    }
+
+    .option:hover {
+      border-color: var(--accent);
+      background: var(--surface-hover);
+    }
+
+    .option.selected {
+      border-color: var(--accent);
+      background: rgba(59, 130, 246, 0.12);
+    }
+
+    .option input {
+      margin-top: 0.2rem;
+      accent-color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .option label {
+      cursor: pointer;
+      flex: 1;
+      font-size: 0.95rem;
+    }
+
+    .nav-buttons {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 1.75rem;
+      gap: 1rem;
+    }
+
+    .btn {
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      border: none;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.2s, transform 0.1s;
+    }
+
+    .btn:active {
+      transform: scale(0.98);
+    }
+
+    .btn-back {
+      background: transparent;
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+    }
+
+    .btn-back:hover {
+      background: var(--surface-hover);
+      color: var(--text);
+    }
+
+    .btn-next {
+      background: var(--accent);
+      color: white;
+      margin-left: auto;
+    }
+
+    .btn-next:hover:not(:disabled) {
+      background: var(--accent-hover);
+    }
+
+    .btn-next:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .result-screen {
+      text-align: center;
+      padding: 2rem 0;
+    }
+
+    .result-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+      border: 4px solid;
+    }
+
+    .result-badge.g1 { background: rgba(34, 197, 94, 0.2); border-color: var(--success); color: var(--success); }
+    .result-badge.g2 { background: rgba(34, 197, 94, 0.15); border-color: #4ade80; color: #4ade80; }
+    .result-badge.g3 { background: rgba(245, 158, 11, 0.2); border-color: var(--warning); color: var(--warning); }
+    .result-badge.g4 { background: rgba(239, 68, 68, 0.2); border-color: var(--danger); color: #f87171; }
+    .result-badge.g5 { background: rgba(239, 68, 68, 0.25); border-color: #dc2626; color: #fca5a5; }
+
+    .result-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+
+    .result-desc {
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      max-width: 400px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .result-recommend {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      text-align: left;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin-top: 1.5rem;
+    }
+
+    .result-recommend strong {
+      color: var(--text);
+    }
+
+    .btn-restart {
+      margin-top: 2rem;
+      background: var(--surface-hover);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-restart:hover {
+      background: var(--border);
+    }
+
+    .fallback-hint {
+      margin-top: 1.25rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .page-footer {
+      margin-top: 2.5rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    @media (max-width: 480px) {
+      .page { padding: 1.5rem 1rem 3rem; }
+      h1 { font-size: 1.25rem; }
+      .step-question { font-size: 1rem; }
+      .option { padding: 0.85rem; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>Группа риска развития профессионального заболевания</h1>
+      <p class="subtitle">На основе <a href="https://irioh.ru/doc/scie-report/MR_gruppy_riska_s_oformleniem_podpisan_v2.pdf" target="_blank" rel="noopener noreferrer">методических рекомендаций Минтруда и Минздрава России (2024)</a></p>
+    </header>
+
+    <div class="progress-wrap">
+      <div class="progress-bar">
+        <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+      </div>
+      <div class="progress-text" id="progressText">Вопрос 0 из 10</div>
+    </div>
+
+    <div id="stepsContainer">
+      <!-- При отключённом JavaScript показывается первый вопрос (для просмотра в Telegram и т.п.) -->
+      <div class="step-card js-fallback" data-step="specialFactors">
+        <div class="step-title">Условия труда</div>
+        <div class="step-question">Имеется ли на рабочем месте контакт с химическими веществами-аллергенами, веществами, опасными для репродуктивного здоровья, обладающими остронаправленным действием, канцерогенами любой природы или инфекционными агентами?</div>
+        <div class="options">
+          <div class="option"><input type="radio" name="specialFactors_opt" id="specialFactors_0" value="false"><label for="specialFactors_0">Нет</label></div>
+          <div class="option"><input type="radio" name="specialFactors_opt" id="specialFactors_1" value="true"><label for="specialFactors_1">Да</label></div>
+        </div>
+        <p class="fallback-hint">Калькулятор работает только при открытии по ссылке в браузере (Chrome, Safari и т.д.). Открытие файла из мессенджера не запускает опрос. Сохраните страницу на сайт или откройте её по ссылке.</p>
+      </div>
+    </div>
+
+    <div id="resultScreen" class="result-screen hidden">
+      <div class="step-card">
+        <div id="resultBadge" class="result-badge g1">1</div>
+        <h2 id="resultTitle" class="result-title">Малый риск</h2>
+        <p id="resultDesc" class="result-desc"></p>
+        <div id="resultRecommend" class="result-recommend"></div>
+        <button type="button" class="btn btn-restart" id="btnRestart">Пройти заново</button>
+      </div>
+    </div>
+
+    <div class="nav-buttons hidden" id="navButtons">
+      <button type="button" class="btn btn-back" id="btnBack">Назад</button>
+      <button type="button" class="btn btn-next" id="btnNext" disabled>Далее</button>
+    </div>
+
+    <noscript>
+      <div class="step-card" style="margin-top: 1rem;">
+        <p style="color: var(--text-muted); margin: 0;">Для работы калькулятора нужен JavaScript. Откройте страницу по ссылке в браузере (не как файл из мессенджера).</p>
+      </div>
+    </noscript>
+
+    <footer class="page-footer">© Николаев С.П., 2026. Все права защищены.</footer>
+  </div>
+
+  <script>
+    (function() {
+      let specialFactors = false; // контакт с аллергенами, канцерогенами и т.д. (влияет на критерии 1 и 2)
+      const answers = {};
+
+      const STEPS = [
+        {
+          id: 'specialFactors',
+          criterion: 0,
+          title: 'Условия труда',
+          question: 'Имеется ли на рабочем месте контакт с химическими веществами-аллергенами, веществами, опасными для репродуктивного здоровья, обладающими остронаправленным действием, канцерогенами любой природы или инфекционными агентами?',
+          options: [
+            { value: false, label: 'Нет', group: null },
+            { value: true, label: 'Да', group: null }
+          ]
+        },
+        {
+          id: 'criterion1',
+          criterion: 1,
+          title: 'Критерий 1. Класс условий труда',
+          question: 'Какой класс условий труда установлен по результатам СОУТ или производственного контроля?',
+          optionsNormal: [
+            { value: 1, label: 'Класс 1.1 или 2 (допустимый)', group: 1 },
+            { value: 2, label: 'Класс 3.1', group: 2 },
+            { value: 3, label: 'Класс 3.2', group: 3 },
+            { value: 4, label: 'Класс 3.3', group: 4 },
+            { value: 5, label: 'Класс 3.4 или 4', group: 5 },
+            { value: 'nodata', label: 'Нет данных', group: null }
+          ],
+          optionsSpecial: [
+            { value: 0, label: 'Нет контакта с указанными факторами', group: 1 },
+            { value: 1, label: 'Класс 2 (допустимый)', group: 2 },
+            { value: 2, label: 'Класс 3.1', group: 3 },
+            { value: 3, label: 'Класс 3.2', group: 4 },
+            { value: 4, label: 'Класс 3.3, 3.4 или 4', group: 5 },
+            { value: 'nodata', label: 'Нет данных', group: null }
+          ]
+        },
+        {
+          id: 'criterion2',
+          criterion: 2,
+          title: 'Критерий 2. Стаж работы',
+          question: 'Стаж работы в условиях воздействия вредных и (или) опасных производственных факторов?',
+          optionsNormal: [
+            { value: 1, label: 'Менее 10 лет', group: 1 },
+            { value: 2, label: '10 — менее 15 лет', group: 2 },
+            { value: 3, label: '15 — менее 20 лет', group: 3 },
+            { value: 4, label: '20 — менее 25 лет', group: 4 },
+            { value: 5, label: '25 лет и более', group: 5 },
+            { value: 'nodata', label: 'Нет данных', group: null }
+          ],
+          optionsSpecial: [
+            { value: 2, label: 'Менее 1 года', group: 2 },
+            { value: 3, label: '1 — менее 3 лет', group: 3 },
+            { value: 4, label: '3 — менее 10 лет', group: 4 },
+            { value: 5, label: '10 лет и более', group: 5 },
+            { value: 'nodata', label: 'Нет данных', group: null }
+          ]
+        },
+        {
+          id: 'criterion3',
+          criterion: 3,
+          title: 'Критерий 3. Профессиональные заболевания (основной)',
+          question: 'Наличие профессиональных заболеваний или их признаков?',
+          options: [
+            { value: 1, label: 'Признаков и заболеваний нет', group: 1 },
+            { value: 2, label: 'Есть признаки воздействия фактора (жалобы по опросу/осмотру)', group: 2 },
+            { value: 3, label: 'Ранние признаки воздействия ВОПФ или начальные формы ПЗ, подтверждённые клинически', group: 3 },
+            { value: 4, label: 'Одно профессиональное заболевание, подтверждённое инструментально и лабораторно', group: 4 },
+            { value: 5, label: 'Два и более ПЗ или нет регресса после лечения', group: 5 }
+          ]
+        },
+        {
+          id: 'criterion4',
+          criterion: 4,
+          title: 'Критерий 4. ХНИЗ, БСУТ, общесоматическая патология',
+          question: 'Наличие хронических неинфекционных заболеваний (ХНИЗ), болезней, связанных с условиями труда (БСУТ) или другой общесоматической патологии?',
+          options: [
+            { value: 1, label: 'Патологии и признаков нет', group: 1 },
+            { value: 2, label: 'Ранние симптомы по опросу (жалобы), диагноза нет, МИК = 0', group: 2 },
+            { value: 3, label: 'Есть ХНИЗ/БСУТ по обследованию, МИК = 0,5–3', group: 3 },
+            { value: 4, label: 'Два ХНИЗ/БСУТ или коморбидность, МИК = 3–6', group: 4 },
+            { value: 5, label: 'Более двух ХНИЗ/БСУТ, коморбидный фон, МИК ≥ 6', group: 5 }
+          ]
+        },
+        {
+          id: 'criterion5',
+          criterion: 5,
+          title: 'Критерий 5. Факторы риска',
+          question: 'Факторы риска (курение, алкоголь, ИМТ, гиподинамия, наследственность, профессиональный стресс)?',
+          options: [
+            { value: 1, label: 'Факторов риска нет', group: 1 },
+            { value: 2, label: 'Низкая степень (курение <10 пачка/лет, алкоголь в норме, ИМТ <30, ПС низкий)', group: 2 },
+            { value: 3, label: 'Умеренная степень (курение 10–40 пачка/лет, ИМТ 30–35, гиподинамия и/или отягощённая наследственность)', group: 3 },
+            { value: 4, label: 'Высокая степень (курение >40 пачка/лет, ИМТ 35–40, ПС выраженный)', group: 4 },
+            { value: 5, label: 'Очень высокая (алкогольная/наркотическая зависимость 3 ст., ИМТ >40, ПС высокий)', group: 5 }
+          ]
+        },
+        {
+          id: 'criterion6',
+          criterion: 6,
+          title: 'Критерий 6. Медицинский прогноз',
+          question: 'Медицинский прогноз риска возникновения и течения заболевания?',
+          options: [
+            { value: 1, label: 'Благоприятный, заболеваний и факторов риска нет', group: 1 },
+            { value: 2, label: 'Благоприятный, есть признаки воздействия фактора и/или ФР низкой степени', group: 2 },
+            { value: 3, label: 'Относительно благоприятный: начальные формы ПЗ или ХНИЗ/БСУТ начальной–средней тяжести', group: 3 },
+            { value: 4, label: 'Неблагоприятный: противопоказания к работе, прогрессирование после профилактики, коморбидный фон', group: 4 },
+            { value: 5, label: 'Неблагоприятный: после лечения сохраняются противопоказания, нужен перевод или прекращение работы', group: 5 }
+          ]
+        },
+        {
+          id: 'criterion7',
+          criterion: 7,
+          title: 'Критерий 7. Гигиенические мероприятия',
+          question: 'Выполняются ли общие (гигиенические) мероприятия по снижению риска: дополнительный ПК, изменение РТО, более эффективные СИЗ, программа профилактики с доказанной эффективностью?',
+          options: [
+            { value: false, label: 'Нет', group: null },
+            { value: true, label: 'Да', group: null }
+          ]
+        },
+        {
+          id: 'criterion8',
+          criterion: 8,
+          title: 'Критерий 8. Медицинская профилактика',
+          question: 'Выполняются ли мероприятия медицинской профилактики: регламент ПМО, оздоровительные/лечебные/реабилитационные мероприятия (в т.ч. СКЛ) 1–2 раза в год или перевод на место с меньшими вредностями?',
+          options: [
+            { value: false, label: 'Нет', group: null },
+            { value: true, label: 'Да', group: null }
+          ]
+        }
+      ];
+
+      const GROUP_NAMES = {
+        1: { name: 'Малый риск', short: 'малый риск' },
+        2: { name: 'Умеренный риск', short: 'умеренный риск' },
+        3: { name: 'Средний риск', short: 'средний риск' },
+        4: { name: 'Высокий риск', short: 'высокий риск' },
+        5: { name: 'Очень высокий / экстремально высокий риск', short: 'очень высокий риск' }
+      };
+
+      const RECOMMENDATIONS = {
+        1: 'Проведение оздоровительных, лечебных, реабилитационных мероприятий не требуется. Рекомендуется рациональная организация труда, контроль соблюдения режима труда и отдыха, использование СИЗ.',
+        2: 'Требуется проведение общегигиенических и лечебных профилактических мероприятий, возможно проведение оздоровительных мероприятий (факультативно, 1 раз в год).',
+        3: 'Требуется проведение общегигиенических, медицинских профилактических, лечебных, реабилитационных и оздоровительных мероприятий (обязательно 1 раз в год).',
+        4: 'Необходимы интенсивные предупреждающие мероприятия: программы общегигиенической профилактики, интенсивная медикаментозная поддержка и реабилитация. Лечебные и оздоровительные мероприятия — обязательно 2 раза в год, 1 раз в центре профпатологии. При необходимости — решение вопросов профпригодности, смены профессии.',
+        5: 'Требуется решение вопросов профпригодности, возможно перевод на другое место работы. Обязательно 2 раза в год — обследование в центре профпатологии, разработка программы профилактики и реабилитации.'
+      };
+
+      function getStepsOrder() {
+        const order = ['specialFactors', 'criterion1', 'criterion2', 'criterion3', 'criterion4', 'criterion5', 'criterion6', 'criterion7', 'criterion8'];
+        return order;
+      }
+
+      function getOptionList(step) {
+        if (step.id === 'criterion1') {
+          return specialFactors ? step.optionsSpecial : step.optionsNormal;
+        }
+        if (step.id === 'criterion2') {
+          return specialFactors ? step.optionsSpecial : step.optionsNormal;
+        }
+        return step.options || [];
+      }
+
+      function getCurrentStepIndex() {
+        const order = getStepsOrder();
+        for (let i = 0; i < order.length; i++) {
+          if (answers[order[i]] === undefined) return i;
+        }
+        return order.length;
+      }
+
+      function renderSteps() {
+        if (answers.specialFactors !== undefined) specialFactors = answers.specialFactors === true;
+        const order = getStepsOrder();
+        const currentIdx = getCurrentStepIndex();
+        const container = document.getElementById('stepsContainer');
+        const navButtons = document.getElementById('navButtons');
+        const resultScreen = document.getElementById('resultScreen');
+
+        if (currentIdx >= order.length) {
+          container.classList.add('hidden');
+          navButtons.classList.add('hidden');
+          showResult();
+          return;
+        }
+
+        resultScreen.classList.add('hidden');
+        container.classList.remove('hidden');
+        navButtons.classList.remove('hidden');
+
+        const stepId = order[currentIdx];
+        const step = STEPS.find(s => s.id === stepId);
+        const options = getOptionList(step);
+
+        let html = '<div class="step-card" data-step="' + stepId + '">';
+        html += '<div class="step-title">' + step.title + '</div>';
+        html += '<div class="step-question">' + step.question + '</div>';
+        html += '<div class="options">';
+        options.forEach((opt, i) => {
+          const val = typeof opt.value === 'boolean' ? (opt.value ? 'true' : 'false') : opt.value;
+          const name = stepId + '_opt';
+          const id = stepId + '_' + i;
+          const checked = answers[stepId] !== undefined && String(answers[stepId]) === String(val) ? ' checked' : '';
+          html += '<div class="option' + (checked ? ' selected' : '') + '" data-value="' + val + '" data-group="' + (opt.group != null ? opt.group : '') + '">';
+          html += '<input type="radio" name="' + name + '" id="' + id + '" value="' + val + '" data-group="' + (opt.group != null ? opt.group : '') + '"' + checked + '>';
+          html += '<label for="' + id + '">' + opt.label + '</label></div>';
+        });
+        html += '</div></div>';
+        container.innerHTML = html;
+
+        document.querySelectorAll('.option').forEach(el => {
+          el.addEventListener('click', function() {
+            document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+            this.classList.add('selected');
+            const input = this.querySelector('input');
+            input.checked = true;
+            const group = input.dataset.group;
+            if (group !== undefined && group !== '') answers[stepId] = parseInt(group, 10);
+            else if (input.value === 'true') answers[stepId] = true;
+            else if (input.value === 'false') answers[stepId] = false;
+            else answers[stepId] = input.value;
+            document.getElementById('btnNext').disabled = false;
+          });
+        });
+
+        const progress = ((currentIdx + 1) / order.length) * 100;
+        document.getElementById('progressFill').style.width = progress + '%';
+        document.getElementById('progressText').textContent = 'Вопрос ' + (currentIdx + 1) + ' из ' + order.length;
+
+        document.getElementById('btnNext').disabled = answers[stepId] === undefined;
+      }
+
+      function calculateResult() {
+        if (answers.specialFactors === true) specialFactors = true;
+        else specialFactors = false;
+
+        const G1 = answers.criterion1 === 'nodata' ? null : (answers.criterion1 ?? 1);
+        const G2 = answers.criterion2 === 'nodata' ? null : (answers.criterion2 ?? 1);
+        const G3 = answers.criterion3 ?? 1;
+        const G4 = answers.criterion4 ?? 1;
+        const G5 = answers.criterion5 ?? 1;
+        const G6 = answers.criterion6 ?? 1;
+        const C7 = answers.criterion7 === true;
+        const C8 = answers.criterion8 === true;
+
+        let PGR = G3;
+        const others = [G1, G2, G4, G5, G6].filter(g => g != null);
+        const exceed1 = others.filter(g => g === G3 + 1).length;   // на 1 ступень выше
+        const exceed2 = others.filter(g => g === G3 + 2).length;   // на 2 ступени выше
+        const exceed3plus = others.filter(g => g >= G3 + 3).length; // на 3 и более выше
+
+        if (exceed3plus >= 1 || exceed2 >= 3) {
+          PGR = Math.min(5, G3 + 2);
+        } else if (exceed1 >= 2 || exceed2 >= 2) {
+          PGR = Math.min(5, G3 + 1);
+        }
+
+        let IGR = PGR;
+        if (C7 && C8 && PGR > G3) {
+          IGR = Math.max(G3, PGR - 1);
+        }
+
+        return { IGR, PGR, G3 };
+      }
+
+      function showResult() {
+        const { IGR } = calculateResult();
+        const progressFill = document.getElementById('progressFill');
+        const progressText = document.getElementById('progressText');
+        progressFill.style.width = '100%';
+        progressText.textContent = 'Расчёт завершён';
+
+        const info = GROUP_NAMES[IGR];
+        document.getElementById('resultBadge').textContent = IGR;
+        document.getElementById('resultBadge').className = 'result-badge g' + IGR;
+        document.getElementById('resultTitle').textContent = info.name;
+        document.getElementById('resultDesc').textContent = 'Итоговая группа риска развития профессионального заболевания: ' + info.short + '.';
+        document.getElementById('resultRecommend').innerHTML = '<strong>Рекомендации:</strong> ' + RECOMMENDATIONS[IGR];
+        document.getElementById('resultScreen').classList.remove('hidden');
+      }
+
+      function goNext() {
+        const order = getStepsOrder();
+        const currentIdx = getCurrentStepIndex();
+        const stepId = order[currentIdx];
+        if (stepId === 'specialFactors') {
+          specialFactors = answers.specialFactors === true;
+        }
+        renderSteps();
+      }
+
+      function goBack() {
+        const order = getStepsOrder();
+        const currentIdx = getCurrentStepIndex();
+        if (currentIdx <= 0) return;
+        const prevId = order[currentIdx - 1];
+        delete answers[prevId];
+        if (prevId === 'specialFactors') specialFactors = false;
+        renderSteps();
+      }
+
+      document.getElementById('btnNext').addEventListener('click', goNext);
+      document.getElementById('btnBack').addEventListener('click', goBack);
+      document.getElementById('btnRestart').addEventListener('click', function() {
+        specialFactors = false;
+        Object.keys(answers).forEach(k => delete answers[k]);
+        renderSteps();
+      });
+
+      renderSteps();
+    })();
+  </script>
+</body>
+</html>
