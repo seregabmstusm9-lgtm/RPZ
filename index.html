@@ -333,6 +333,7 @@
         <div class="options">
           <div class="option"><input type="radio" name="specialFactors_opt" id="specialFactors_0" value="false"><label for="specialFactors_0">Нет</label></div>
           <div class="option"><input type="radio" name="specialFactors_opt" id="specialFactors_1" value="true"><label for="specialFactors_1">Да</label></div>
+          <div class="option"><input type="radio" name="specialFactors_opt" id="specialFactors_2" value="nodata"><label for="specialFactors_2">Нет данных</label></div>
         </div>
         <p class="fallback-hint">Калькулятор работает только при открытии по ссылке в браузере (Chrome, Safari и т.д.). Открытие файла из мессенджера не запускает опрос. Сохраните страницу на сайт или откройте её по ссылке.</p>
       </div>
@@ -375,7 +376,8 @@
           question: 'Имеется ли на рабочем месте контакт с химическими веществами-аллергенами, веществами, опасными для репродуктивного здоровья, обладающими остронаправленным действием, канцерогенами любой природы или инфекционными агентами?',
           options: [
             { value: false, label: 'Нет', group: null },
-            { value: true, label: 'Да', group: null }
+            { value: true, label: 'Да', group: null },
+            { value: 'nodata', label: 'Нет данных', group: null }
           ]
         },
         {
