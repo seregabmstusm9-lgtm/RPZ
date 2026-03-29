@@ -6,7 +6,7 @@
   <title>Калькулятор группы риска развития профессионального заболевания</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=PT+Serif:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0f1419;
@@ -133,6 +133,15 @@
       gap: 0.5rem;
     }
 
+    .step-footnote {
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+      font-size: 0.78rem;
+      line-height: 1.45;
+      color: var(--text-muted);
+    }
+
     .option {
       display: flex;
       align-items: flex-start;
@@ -249,21 +258,57 @@
 
     .result-desc {
       color: var(--text-muted);
-      margin-bottom: 1.5rem;
+      margin-bottom: 1rem;
       max-width: 400px;
       margin-left: auto;
       margin-right: auto;
     }
 
+    .result-rationale {
+      text-align: left;
+      max-width: 420px;
+      margin: 0 auto 1.25rem;
+      font-size: 0.9rem;
+      line-height: 1.55;
+      color: var(--text-muted);
+    }
+
+    .rationale-heading {
+      margin: 0 0 0.65rem;
+      font-size: 0.9rem;
+      line-height: 1.45;
+      color: var(--text-muted);
+    }
+
+    .rationale-heading strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
+    .result-rationale-list {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+
+    .result-rationale-list li {
+      margin-bottom: 0.45rem;
+    }
+
+    .result-rationale-list li:last-child {
+      margin-bottom: 0;
+    }
+
+    .result-rationale-list strong {
+      color: var(--text);
+      font-weight: 600;
+    }
+
     .result-recommend {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      padding: 1.25rem;
       text-align: left;
       font-size: 0.9rem;
       color: var(--text-muted);
       margin-top: 1.5rem;
+      line-height: 1.55;
     }
 
     .result-recommend strong {
@@ -271,7 +316,6 @@
     }
 
     .btn-restart {
-      margin-top: 2rem;
       background: var(--surface-hover);
       color: var(--text);
       border: 1px solid var(--border);
@@ -279,6 +323,280 @@
 
     .btn-restart:hover {
       background: var(--border);
+    }
+
+    .result-actions {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 1.5rem;
+    }
+
+    .btn-print {
+      background: transparent;
+      color: var(--accent);
+      border: 2px solid var(--accent);
+    }
+
+    .btn-print:hover {
+      background: rgba(59, 130, 246, 0.15);
+    }
+
+    /* Бланк протокола: единая типографика (тело = методика + таблица + прочее) */
+    .print-sheet {
+      --print-body: #334155;
+      --print-strong: #0f172a;
+      --print-muted: #64748b;
+      --print-rule: #cbd5e1;
+      --print-border: #cbd5e1;
+      margin-top: 1.75rem;
+      padding: 1.5rem 1.25rem;
+      background: #fff;
+      color: var(--print-body);
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border);
+      text-align: left;
+      font-family: 'PT Serif', Georgia, 'Times New Roman', serif;
+      font-size: 9.5pt;
+      line-height: 1.42;
+      box-shadow: inset 0 0 0 1px rgba(0,0,0,0.06);
+    }
+
+    .print-sheet h2.print-doc-title {
+      font-family: inherit;
+      font-size: 1.26em;
+      font-weight: 700;
+      text-align: center;
+      margin: 0 0 0.75rem;
+      line-height: 1.3;
+      color: var(--print-strong);
+      letter-spacing: 0.01em;
+    }
+
+    .print-sheet .print-method {
+      font-size: 1em;
+      color: var(--print-body);
+      text-align: justify;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--print-rule);
+    }
+
+    .print-sheet .print-method strong {
+      color: var(--print-strong);
+    }
+
+    .print-method .print-table-wrap,
+    .print-method .print-table,
+    .print-method .print-scale,
+    .print-method ul {
+      text-align: left;
+    }
+
+    .print-method-lead {
+      margin: 0 0 0.45rem;
+      font-size: 1em;
+      line-height: 1.35;
+      color: var(--print-body);
+    }
+
+    .print-method-lead strong {
+      color: var(--print-strong);
+      font-weight: 700;
+    }
+
+    .print-method .print-table-wrap {
+      margin-top: 0.35rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .print-method .print-table-footnote {
+      margin-bottom: 0;
+    }
+
+    .print-method .print-scale {
+      margin: 0.4rem 0 0.45rem;
+    }
+
+    .print-method .print-group-result-line {
+      margin-bottom: 0;
+    }
+
+    .print-method .print-mod-note {
+      margin-top: 0.35rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .print-fields {
+      display: grid;
+      gap: 0.65rem;
+      margin-bottom: 1rem;
+      font-size: 1em;
+      line-height: inherit;
+    }
+
+    .print-field {
+      display: grid;
+      grid-template-columns: 7.5rem 1fr;
+      gap: 0.5rem;
+      align-items: end;
+      font-size: 1em;
+    }
+
+    .print-field span:first-child {
+      color: var(--print-body);
+      font-family: inherit;
+      font-size: 1em;
+      font-weight: 600;
+    }
+
+    .print-field .line {
+      border-bottom: 1px solid var(--print-border);
+      min-height: 1.15em;
+    }
+
+    .print-table-wrap {
+      overflow-x: auto;
+      margin-bottom: 0.75rem;
+    }
+
+    .print-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 1em;
+      line-height: 1.4;
+      color: var(--print-body);
+    }
+
+    .print-table th,
+    .print-table td {
+      border: 1px solid var(--print-border);
+      padding: 0.42rem 0.48rem;
+      vertical-align: top;
+    }
+
+    .print-table th {
+      background: #f8fafc;
+      font-family: inherit;
+      font-size: 1em;
+      font-weight: 600;
+      color: var(--print-strong);
+    }
+
+    .print-table td {
+      font-size: 1em;
+      font-weight: 400;
+    }
+
+    .print-table td.num {
+      width: 2rem;
+      text-align: center;
+      font-weight: 600;
+      color: var(--print-muted);
+    }
+
+    .print-table th.gr {
+      white-space: nowrap;
+    }
+
+    .print-table td.gr {
+      width: 3.25rem;
+      text-align: center;
+      font-weight: 700;
+      font-family: inherit;
+      color: var(--print-strong);
+    }
+
+    .print-table tr.main-criterion td {
+      background: #fdfbf7;
+    }
+
+    .print-table tr.main-criterion td.gr {
+      box-shadow: inset 3px 0 0 #f59e0b;
+    }
+
+    .print-scale {
+      display: flex;
+      gap: 4px;
+      margin: 0.75rem 0 0.5rem;
+      height: 28px;
+    }
+
+    .print-scale-seg {
+      flex: 1;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: inherit;
+      font-size: 10px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.95);
+      border: 2px solid transparent;
+    }
+
+    .print-scale-seg.s1 { background: #16a34a; }
+    .print-scale-seg.s2 { background: #22c55e; }
+    .print-scale-seg.s3 { background: #eab308; color: #422006; }
+    .print-scale-seg.s4 { background: #f87171; color: #450a0a; }
+    .print-scale-seg.s5 { background: #dc2626; }
+
+    .print-scale-seg.active {
+      border-color: #0f172a;
+      box-shadow: 0 0 0 2px #fff, 0 0 0 4px #0f172a;
+    }
+
+    .print-group-result-line {
+      font-family: inherit;
+      font-size: 1em;
+      font-weight: 400;
+      color: var(--print-strong);
+      margin: 0.35rem 0 0;
+      line-height: 1.45;
+    }
+
+    .print-group-result-line strong {
+      font-weight: 700;
+    }
+
+    .print-mod-note {
+      font-size: 1em;
+      color: var(--print-muted);
+      margin: 0.4rem 0 0.35rem;
+      line-height: 1.4;
+    }
+
+    .print-sheet .print-method.print-rationale {
+      margin-top: 0;
+    }
+
+    .print-sheet .print-method.print-rationale .print-rationale-list {
+      margin: 0.4rem 0 0;
+    }
+
+    .print-rationale-list {
+      margin: 0;
+      padding-left: 1.1rem;
+    }
+
+    .print-rationale-list li {
+      margin-bottom: 0.35rem;
+    }
+
+    .print-table-footnote {
+      font-size: 0.95em;
+      color: var(--print-muted);
+      margin: 0 0 0.5rem;
+      font-family: inherit;
+      line-height: 1.4;
+    }
+
+    .print-notes .note-line {
+      border-bottom: 1px solid var(--print-rule);
+      min-height: 1.35em;
+      margin-top: 0.65rem;
     }
 
     .fallback-hint {
@@ -308,6 +626,154 @@
       h1 { font-size: 1.25rem; }
       .step-question { font-size: 1rem; }
       .option { padding: 0.85rem; }
+    }
+
+    @media print {
+      @page {
+        margin: 9mm 11mm;
+        size: A4;
+      }
+      html,
+      body {
+        background: #fff !important;
+        height: auto !important;
+        min-height: 0 !important;
+        margin: 0 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+      .page {
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        min-height: 0 !important;
+      }
+      /* visibility:hidden оставляет высоту документа → лишняя страница; прячем лишнее через display */
+      .page > header,
+      .page > .progress-wrap,
+      .page > #stepsContainer,
+      .page > #navButtons,
+      .page > .page-footer,
+      .page > noscript {
+        display: none !important;
+      }
+      #resultScreen.hidden {
+        display: block !important;
+      }
+      #resultScreen {
+        padding: 0 !important;
+        margin: 0 !important;
+        text-align: left !important;
+      }
+      #resultScreen .step-card > *:not(#printSheet) {
+        display: none !important;
+      }
+      #resultScreen .step-card {
+        padding: 0 !important;
+        margin: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        background: transparent !important;
+      }
+      #printSheet {
+        --print-body: #334155;
+        --print-strong: #0f172a;
+        --print-muted: #64748b;
+        --print-rule: #cbd5e1;
+        --print-border: #cbd5e1;
+        position: static !important;
+        left: auto !important;
+        top: auto !important;
+        width: 100% !important;
+        max-width: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        border: none !important;
+        box-shadow: none !important;
+        border-radius: 0 !important;
+        page-break-after: avoid !important;
+        break-after: avoid-page !important;
+        font-size: 9.25pt !important;
+        line-height: 1.36 !important;
+      }
+      #printSheet h2.print-doc-title {
+        font-size: 11.75pt !important;
+        margin: 0 0 0.45rem !important;
+        line-height: 1.22 !important;
+      }
+      #printSheet .print-method {
+        margin-bottom: 0.42rem !important;
+        padding-bottom: 0.42rem !important;
+        font-size: 1em !important;
+      }
+      #printSheet .print-method-lead {
+        margin: 0 0 0.32rem !important;
+        font-size: 1em !important;
+        line-height: 1.32 !important;
+      }
+      #printSheet .print-fields {
+        gap: 0.32rem !important;
+        margin-bottom: 0.42rem !important;
+      }
+      #printSheet .print-field {
+        font-size: 1em !important;
+      }
+      #printSheet .print-field span:first-child {
+        font-size: 1em !important;
+      }
+      #printSheet .print-field .line {
+        min-height: 1.05em !important;
+      }
+      #printSheet .print-table-wrap {
+        margin-bottom: 0.28rem !important;
+      }
+      #printSheet .print-table {
+        font-size: 1em !important;
+      }
+      #printSheet .print-table th,
+      #printSheet .print-table td {
+        padding: 0.22rem 0.34rem !important;
+      }
+      #printSheet .print-table-footnote {
+        font-size: 0.95em !important;
+        margin: 0 0 0.25rem !important;
+      }
+      #printSheet .print-scale {
+        height: 24px !important;
+        margin: 0.28rem 0 0.28rem !important;
+        gap: 3px !important;
+      }
+      #printSheet .print-scale-seg {
+        font-size: 9px !important;
+        border-width: 1px !important;
+      }
+      #printSheet .print-scale-seg.active {
+        box-shadow: 0 0 0 1px #fff, 0 0 0 2px #0f172a !important;
+      }
+      #printSheet .print-group-result-line {
+        font-size: 1em !important;
+        margin: 0.25rem 0 0.3rem !important;
+        line-height: 1.38 !important;
+      }
+      #printSheet .print-mod-note {
+        font-size: 1em !important;
+        margin: 0.2rem 0 0 !important;
+        line-height: 1.34 !important;
+      }
+      #printSheet .print-rationale-list {
+        padding-left: 1rem !important;
+        margin-top: 0.3rem !important;
+      }
+      #printSheet .print-rationale-list li {
+        margin-bottom: 0.14rem !important;
+      }
+      #printSheet .print-method.print-rationale {
+        margin-top: 0 !important;
+      }
+      #printSheet .print-notes .note-line {
+        min-height: 1.05em !important;
+        margin-top: 0.4rem !important;
+      }
     }
   </style>
 </head>
@@ -344,8 +810,13 @@
         <div id="resultBadge" class="result-badge g1">1</div>
         <h2 id="resultTitle" class="result-title">Малый риск</h2>
         <p id="resultDesc" class="result-desc"></p>
+        <div id="resultRationale" class="result-rationale" hidden></div>
         <div id="resultRecommend" class="result-recommend"></div>
-        <button type="button" class="btn btn-restart" id="btnRestart">Пройти заново</button>
+        <div class="result-actions">
+          <button type="button" class="btn btn-print" id="btnPrint">Печать протокола</button>
+          <button type="button" class="btn btn-restart" id="btnRestart">Пройти заново</button>
+        </div>
+        <div id="printSheet" class="print-sheet" aria-label="Бланк протокола для печати"></div>
       </div>
     </div>
 
@@ -409,17 +880,17 @@
           question: 'Стаж работы в условиях воздействия вредных и (или) опасных производственных факторов?',
           optionsNormal: [
             { value: 1, label: 'Менее 10 лет', group: 1 },
-            { value: 2, label: '10 — менее 15 лет', group: 2 },
-            { value: 3, label: '15 — менее 20 лет', group: 3 },
-            { value: 4, label: '20 — менее 25 лет', group: 4 },
-            { value: 5, label: '25 лет и более', group: 5 },
+            { value: 2, label: 'От 10 до 15 лет', group: 2 },
+            { value: 3, label: 'От 15 до 20 лет', group: 3 },
+            { value: 4, label: 'От 20 до 25 лет', group: 4 },
+            { value: 5, label: 'От 25 лет и более', group: 5 },
             { value: 'nodata', label: 'Нет данных', group: null }
           ],
           optionsSpecial: [
             { value: 2, label: 'Менее 1 года', group: 2 },
-            { value: 3, label: '1 — менее 3 лет', group: 3 },
-            { value: 4, label: '3 — менее 10 лет', group: 4 },
-            { value: 5, label: '10 лет и более', group: 5 },
+            { value: 3, label: 'От 1 до 3 лет', group: 3 },
+            { value: 4, label: 'От 3 до 10 лет', group: 4 },
+            { value: 5, label: 'От 10 лет и более', group: 5 },
             { value: 'nodata', label: 'Нет данных', group: null }
           ]
         },
@@ -528,6 +999,49 @@
         return step.options || [];
       }
 
+      function esc(s) {
+        return String(s)
+          .replace(/&/g, '&amp;')
+          .replace(/</g, '&lt;')
+          .replace(/>/g, '&gt;')
+          .replace(/"/g, '&quot;');
+      }
+
+      function labelForStep(stepId) {
+        if (answers.specialFactors === true) specialFactors = true;
+        else specialFactors = false;
+        const step = STEPS.find(function (s) { return s.id === stepId; });
+        if (!step) return '—';
+        const opts = getOptionList(step);
+        const a = answers[stepId];
+        if (a === undefined) return '—';
+        if (stepId === 'specialFactors') {
+          const opt = opts.find(function (o) {
+            return (
+              (o.value === false && a === false) ||
+              (o.value === true && a === true) ||
+              (o.value === 'nodata' && a === 'nodata')
+            );
+          });
+          return opt ? opt.label : '—';
+        }
+        if (stepId === 'criterion7' || stepId === 'criterion8') {
+          const opt = opts.find(function (o) {
+            return (o.value === true && a === true) || (o.value === false && a === false);
+          });
+          return opt ? opt.label : '—';
+        }
+        if (a === 'nodata') {
+          const nod = opts.find(function (o) { return o.value === 'nodata'; });
+          return nod ? nod.label : 'Нет данных';
+        }
+        if (typeof a === 'number') {
+          const opt = opts.find(function (o) { return o.group === a; });
+          return opt ? opt.label : '—';
+        }
+        return '—';
+      }
+
       function getCurrentStepIndex() {
         const order = getStepsOrder();
         for (let i = 0; i < order.length; i++) {
@@ -554,6 +1068,12 @@
         resultScreen.classList.add('hidden');
         container.classList.remove('hidden');
         navButtons.classList.remove('hidden');
+        document.getElementById('printSheet').innerHTML = '';
+        const rationaleEl = document.getElementById('resultRationale');
+        if (rationaleEl) {
+          rationaleEl.innerHTML = '';
+          rationaleEl.hidden = true;
+        }
 
         const stepId = order[currentIdx];
         const step = STEPS.find(s => s.id === stepId);
@@ -572,7 +1092,12 @@
           html += '<input type="radio" name="' + name + '" id="' + id + '" value="' + val + '" data-group="' + (opt.group != null ? opt.group : '') + '"' + checked + '>';
           html += '<label for="' + id + '">' + opt.label + '</label></div>';
         });
-        html += '</div></div>';
+        html += '</div>';
+        if (stepId === 'criterion4') {
+          html +=
+            '<p class="step-footnote">МИК — модифицированный индекс коморбидности, определяется в соответствии с таблицей 2 Методических рекомендаций.</p>';
+        }
+        html += '</div>';
         container.innerHTML = html;
 
         document.querySelectorAll('.option').forEach(el => {
@@ -597,7 +1122,7 @@
         document.getElementById('btnNext').disabled = answers[stepId] === undefined;
       }
 
-      function calculateResult() {
+      function computeRiskGroups() {
         if (answers.specialFactors === true) specialFactors = true;
         else specialFactors = false;
 
@@ -611,23 +1136,325 @@
         const C8 = answers.criterion8 === true;
 
         let PGR = G3;
-        const others = [G1, G2, G4, G5, G6].filter(g => g != null);
-        const exceed1 = others.filter(g => g === G3 + 1).length;   // на 1 ступень выше
-        const exceed2 = others.filter(g => g === G3 + 2).length;   // на 2 ступени выше
-        const exceed3plus = others.filter(g => g >= G3 + 3).length; // на 3 и более выше
+        const others = [G1, G2, G4, G5, G6].filter(function (g) {
+          return g != null;
+        });
+        const exceed1 = others.filter(function (g) {
+          return g === G3 + 1;
+        }).length;
+        const exceed2 = others.filter(function (g) {
+          return g === G3 + 2;
+        }).length;
+        const exceed3plus = others.filter(function (g) {
+          return g >= G3 + 3;
+        }).length;
 
+        let raiseRule = 'none';
         if (exceed3plus >= 1 || exceed2 >= 3) {
           PGR = Math.min(5, G3 + 2);
+          raiseRule = 'plus2';
         } else if (exceed1 >= 2 || exceed2 >= 2) {
           PGR = Math.min(5, G3 + 1);
+          raiseRule = 'plus1';
         }
 
         let IGR = PGR;
+        let loweredBy78 = false;
         if (C7 && C8 && PGR > G3) {
-          IGR = Math.max(G3, PGR - 1);
+          const next = Math.max(G3, PGR - 1);
+          loweredBy78 = next < PGR;
+          IGR = next;
         }
 
-        return { IGR, PGR, G3 };
+        return {
+          G1: G1,
+          G2: G2,
+          G3: G3,
+          G4: G4,
+          G5: G5,
+          G6: G6,
+          C7: C7,
+          C8: C8,
+          PGR: PGR,
+          IGR: IGR,
+          exceed1: exceed1,
+          exceed2: exceed2,
+          exceed3plus: exceed3plus,
+          raiseRule: raiseRule,
+          loweredBy78: loweredBy78
+        };
+      }
+
+      function calculateResult() {
+        const x = computeRiskGroups();
+        return { IGR: x.IGR, PGR: x.PGR, G3: x.G3 };
+      }
+
+      function buildRationaleHtml(variant) {
+        const d = computeRiskGroups();
+
+        const items = [];
+
+        items.push(
+          'Базовая оценка — по <strong>критерию 3</strong> (основной): группа <strong>' +
+            d.G3 +
+            '</strong> (п. 3.2.1, п. 3.1.2–3.1.3). Градации по критериям 1–6 — табл. 1, перечень критериев — п. 2.1.'
+        );
+
+        if (answers.specialFactors === true) {
+          items.push(
+            'Для критериев 1–2 применена шкала п/п 1.2 табл. 1 (контакт с особыми ВОПФ; см. разд. 1).'
+          );
+        }
+
+        if (d.G1 == null || d.G2 == null) {
+          items.push(
+            'По критерию 1 и/или 2 выбрано <strong>«Нет данных»</strong> — в автоматическом согласовании по п. 3.2.2 такой критерий <strong>не участвует</strong> (см. сводную таблицу ответов).'
+          );
+        }
+
+        if (d.raiseRule === 'none') {
+          items.push(
+            'Условия повышения предварительной группы по п. 3.2.2 <strong>не выполнены</strong> (недостаточно согласованных отклонений критериев 1, 2, 4, 5, 6 относительно критерия&nbsp;3). Предварительная группа <strong>' +
+              d.PGR +
+              '</strong>.'
+          );
+        } else if (d.raiseRule === 'plus2') {
+          items.push(
+            'По п. 3.2.2 предварительная группа <strong>повышена на две ступени</strong> (до <strong>' +
+              d.PGR +
+              '</strong>): есть минимум один критерий из 1, 2, 4, 5, 6 с группой <strong>не ниже, чем на три ступени выше</strong>, чем по критерию&nbsp;3, и/или <strong>не менее трёх</strong> таких критериев с отрывом <strong>в две ступени</strong>. Фактически: «+3 и более» — ' +
+              d.exceed3plus +
+              ', «ровно +2» — ' +
+              d.exceed2 +
+              '.'
+          );
+        } else {
+          items.push(
+            'По п. 3.2.2 предварительная группа <strong>повышена на одну ступень</strong> (до <strong>' +
+              d.PGR +
+              '</strong>): <strong>не менее двух</strong> критериев из 1, 2, 4, 5, 6 отстают от критерия&nbsp;3 на одну ступень и/или не менее двух — на две (без оснований для повышения сразу на две ступени). Счётчики: «+1» — ' +
+              d.exceed1 +
+              ', «+2» — ' +
+              d.exceed2 +
+              '.'
+          );
+        }
+
+        if (d.raiseRule === 'plus2' && d.PGR === 5 && d.G3 + 2 > 5) {
+          items.push(
+            'Итог предварительной группы ограничен <strong>5-й</strong> группой (потолок шкалы по табл. 1).'
+          );
+        }
+
+        if (d.loweredBy78) {
+          items.push(
+            'По п. 3.2.3 при ответах «да» по <strong>критериям 7 и 8</strong> итоговая группа <strong>снижена на 1</strong> по сравнению с предварительной: <strong>' +
+              d.PGR +
+              ' → ' +
+              d.IGR +
+              '</strong>.'
+          );
+        }
+
+        items.push(
+          'Итоговая группа <strong>' +
+            d.IGR +
+            '</strong> — по п. 3.1; критерии 7–8 учитываются как в п. 3.2.3 (п. 2.1, п. 3.1.2).'
+        );
+
+        const li = items
+          .map(function (t) {
+            return '<li>' + t + '</li>';
+          })
+          .join('');
+        const listClass = variant === 'print' ? 'print-rationale-list' : 'result-rationale-list';
+        if (variant === 'print') {
+          return (
+            '<div class="print-method print-rationale">' +
+            '<p class="print-method-lead"><strong>Обоснование расчёта:</strong></p>' +
+            '<ul class="' +
+            listClass +
+            '">' +
+            li +
+            '</ul></div>'
+          );
+        }
+        return (
+          '<p class="rationale-heading"><strong>Кратко: почему такая группа</strong></p><ul class="' +
+          listClass +
+          '">' +
+          li +
+          '</ul>'
+        );
+      }
+
+      function renderPrintSheet() {
+        if (answers.specialFactors === true) specialFactors = true;
+        else specialFactors = false;
+
+        const d = computeRiskGroups();
+        const IGR = d.IGR;
+        const PGR = d.PGR;
+        const G3 = d.G3;
+        const G1 = d.G1;
+        const G2 = d.G2;
+        const G4 = d.G4;
+        const G5 = d.G5;
+        const G6 = d.G6;
+        const C7 = d.C7;
+        const C8 = d.C8;
+
+        const rationaleBlock = buildRationaleHtml('print');
+
+        const info = GROUP_NAMES[IGR];
+        const recText = RECOMMENDATIONS[IGR];
+
+        let modNote = '';
+        if (C7 && C8 && PGR > G3 && d.loweredBy78) {
+          modNote =
+            '<p class="print-mod-note">Учтено снижение на одну ступень по критериям 7 и 8. Предварительная группа до коррекции: <strong>' +
+            PGR +
+            '</strong>, итоговая: <strong>' +
+            IGR +
+            '</strong>.</p>';
+        }
+
+        const scaleSegs = [1, 2, 3, 4, 5]
+          .map(function (n) {
+            return (
+              '<div class="print-scale-seg s' +
+              n +
+              (n === IGR ? ' active' : '') +
+              '">' +
+              n +
+              '</div>'
+            );
+          })
+          .join('');
+
+        const rows = [
+          {
+            num: '—',
+            crit: 'Вводный вопрос (особые ВОПФ на рабочем месте)',
+            ans: labelForStep('specialFactors'),
+            g: '—',
+            main: false
+          },
+          {
+            num: '1',
+            crit: 'Критерий 1. Класс условий труда',
+            ans: labelForStep('criterion1'),
+            g: G1 == null ? '—' : String(G1),
+            main: false
+          },
+          {
+            num: '2',
+            crit: 'Критерий 2. Стаж во вредных/опасных условиях',
+            ans: labelForStep('criterion2'),
+            g: G2 == null ? '—' : String(G2),
+            main: false
+          },
+          {
+            num: '3',
+            crit: 'Критерий 3. Профессиональные заболевания (основной)',
+            ans: labelForStep('criterion3'),
+            g: String(G3),
+            main: true
+          },
+          {
+            num: '4',
+            crit: 'Критерий 4. ХНИЗ, БСУТ, общесоматическая патология',
+            ans: labelForStep('criterion4'),
+            g: String(G4),
+            main: false
+          },
+          {
+            num: '5',
+            crit: 'Критерий 5. Факторы риска',
+            ans: labelForStep('criterion5'),
+            g: String(G5),
+            main: false
+          },
+          {
+            num: '6',
+            crit: 'Критерий 6. Медицинский прогноз',
+            ans: labelForStep('criterion6'),
+            g: String(G6),
+            main: false
+          },
+          {
+            num: '7',
+            crit: 'Критерий 7. Гигиенические мероприятия',
+            ans: labelForStep('criterion7'),
+            g: '—',
+            main: false
+          },
+          {
+            num: '8',
+            crit: 'Критерий 8. Медицинская профилактика',
+            ans: labelForStep('criterion8'),
+            g: '—',
+            main: false
+          }
+        ];
+
+        const rowHtml = rows
+          .map(function (r) {
+            return (
+              '<tr' +
+              (r.main ? ' class="main-criterion"' : '') +
+              '><td class="num">' +
+              esc(r.num) +
+              '</td><td>' +
+              esc(r.crit) +
+              '</td><td>' +
+              esc(r.ans) +
+              '</td><td class="gr">' +
+              esc(r.g) +
+              '</td></tr>'
+            );
+          })
+          .join('');
+
+        const html =
+          '<h2 class="print-doc-title">Протокол определения группы профессионального риска</h2>' +
+          '<div class="print-method"><strong>Методика:</strong> Методические рекомендации по формированию групп риска развития профессиональных заболеваний на основе результатов предварительных и периодических медицинских осмотров (Медико-профилактическая технология) ' +
+          '(утв. Министерством здравоохранения Российской Федерации и Министерством труда и социальной защиты Российской Федерации, 2024&nbsp;г.).</div>' +
+          '<div class="print-fields">' +
+          '<div class="print-field"><span>ФИО</span><div class="line"></div></div>' +
+          '<div class="print-field"><span>Дата рождения</span><div class="line"></div></div>' +
+          '<div class="print-field"><span>Должность</span><div class="line"></div></div>' +
+          '</div>' +
+          '<div class="print-method">' +
+          '<p class="print-method-lead"><strong>Сводная таблица критериев оценки:</strong></p>' +
+          '<div class="print-table-wrap"><table class="print-table"><thead><tr><th class="num">№</th><th>Критерий</th><th>Показатель</th><th class="gr">Группа риска</th></tr></thead><tbody>' +
+          rowHtml +
+          '</tbody></table></div>' +
+          '<p class="print-table-footnote">* Критерий 3 — основной критерий при определении предварительной группы.</p>' +
+          '</div>' +
+          '<div class="print-method">' +
+          '<p class="print-method-lead"><strong>Итоговая группа профессионального риска:</strong></p>' +
+          '<div class="print-scale">' +
+          scaleSegs +
+          '</div>' +
+          '<p class="print-group-result-line"><strong>' +
+          IGR +
+          '</strong> — ' +
+          esc(info.name) +
+          ' развития профессионального заболевания.</p>' +
+          modNote +
+          '</div>' +
+          rationaleBlock +
+          '<div class="print-method"><strong>Рекомендации:</strong> ' +
+          esc(recText) +
+          '</div>' +
+          '<div class="print-notes">' +
+          '<div class="note-line"></div>' +
+          '<div class="note-line"></div>' +
+          '</div>';
+
+        document.getElementById('printSheet').innerHTML = html;
       }
 
       function showResult() {
@@ -641,8 +1468,13 @@
         document.getElementById('resultBadge').textContent = IGR;
         document.getElementById('resultBadge').className = 'result-badge g' + IGR;
         document.getElementById('resultTitle').textContent = info.name;
-        document.getElementById('resultDesc').textContent = 'Итоговая группа риска развития профессионального заболевания: ' + info.short + '.';
+        document.getElementById('resultDesc').textContent = '';
+        document.getElementById('resultDesc').classList.add('hidden');
+        const ratEl = document.getElementById('resultRationale');
+        ratEl.innerHTML = buildRationaleHtml('screen');
+        ratEl.hidden = false;
         document.getElementById('resultRecommend').innerHTML = '<strong>Рекомендации:</strong> ' + RECOMMENDATIONS[IGR];
+        renderPrintSheet();
         document.getElementById('resultScreen').classList.remove('hidden');
       }
 
@@ -668,6 +1500,9 @@
 
       document.getElementById('btnNext').addEventListener('click', goNext);
       document.getElementById('btnBack').addEventListener('click', goBack);
+      document.getElementById('btnPrint').addEventListener('click', function () {
+        window.print();
+      });
       document.getElementById('btnRestart').addEventListener('click', function() {
         specialFactors = false;
         Object.keys(answers).forEach(k => delete answers[k]);
